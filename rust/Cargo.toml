@@ -1,0 +1,16 @@
+[package]
+name = "rust_lib_flutter_vello"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+anyhow = "1.0.82"
+clap = { version = "4.5.4", features = ["derive"] }
+flutter_rust_bridge = "=2.0.0-dev.31"
+futures-intrusive = "0.5.0"
+pollster = "0.3.0"
+vello = "0.1.0"
+wgpu = "0.19.3"
