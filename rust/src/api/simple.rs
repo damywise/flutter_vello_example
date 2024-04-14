@@ -1,10 +1,6 @@
-use anyhow::anyhow;
-use anyhow::bail;
 use core::num::NonZeroUsize;
 use pollster::FutureExt;
 use std::collections::HashMap;
-use std::ops::Deref;
-use std::os::windows::thread;
 use std::sync::mpsc;
 use std::sync::mpsc::Receiver;
 use std::sync::mpsc::Sender;
@@ -113,9 +109,19 @@ fn init_renderer() {
         loop {
             let request = renderer_request_rx.recv().unwrap();
             let response = match request.command {
-                RenderCommand::Render => {
+                RenderCommand::Render(pos) => {
                     scene.reset();
-                    add_shapes_to_scene(&mut scene);
+                    // add_shapes_to_scene(&mut scene);
+                    fn render_rectangle_pos(scene: &mut Scene, pos: &Pos) {
+                        scene.fill(
+                            vello::peniko::Fill::NonZero,
+                            Affine::IDENTITY,
+                            Color::rgb(0.9804, 0.702, 0.5294),
+                            None,
+                            &RoundedRect::new(pos.x, pos.y, 0.0, 0.0, 20.0),
+                        );
+                    }
+                    render_rectangle_pos(&mut scene, &pos);
                     let size = Extent3d {
                         width,
                         height,
@@ -228,7 +234,7 @@ fn init_renderer() {
     }
 }
 
-pub async fn test_render() -> Vec<u8> {
+pub async fn test_render(x: f32, y: f32) -> Vec<u8> {
     let key: String = "key".to_string();
 
     let map = RENDERERS.read().unwrap();
@@ -239,7 +245,10 @@ pub async fn test_render() -> Vec<u8> {
     let context = &map[&key];
 
     match context.renderer_request_tx.send(RenderRequest {
-        command: RenderCommand::Render,
+        command: RenderCommand::Render(Pos {
+            x: x.into(),
+            y: y.into(),
+        }),
     }) {
         Ok(result) => result,
         Err(e) => panic!("Renderer connection lost. {}", e),
@@ -316,7 +325,12 @@ fn add_shapes_to_scene(scene: &mut Scene) {
 }
 
 enum RenderCommand {
-    Render,
+    Render(Pos),
+}
+
+struct Pos {
+    pub x: f64,
+    pub y: f64,
 }
 
 struct RenderRequest {

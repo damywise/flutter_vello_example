@@ -46,40 +46,59 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   ui.Image? image;
 
+  bool isRendering = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('flutter_rust_bridge quickstart')),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-                'Action: Call Rust `greet("Tom")`\nResult: `${greet(name: "Tom")}`'),
-            TextButton(
-              onPressed: () async {
-                print('Get Image');
-                final now = DateTime.now();
-                final bytes = await testRender();
-                print('Get Image took ${DateTime.now().difference(now)}');
-                ui.decodeImageFromPixels(
-                  bytes,
-                  800,
-                  600,
-                  ui.PixelFormat.rgba8888,
-                  (result) {
-                    setState(() {
-                      image = result;
-                    });
-                    print('Done');
-                  },
-                );
-              },
-              child: const Text('Get Image'),
-            ),
-            if (image != null) RawImage(image: image!),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                  'Action: Call Rust `greet("Tom")`\nResult: `${greet(name: "Tom")}`'),
+              Listener(
+                onPointerHover: (event) async {
+                  if (isRendering) {
+                    return;
+                  }
+                  isRendering = true;
+                  final bytes = await testRender(
+                    x: event.localPosition.dx,
+                    y: event.localPosition.dy,
+                  );
+                  ui.decodeImageFromPixels(
+                    bytes,
+                    800,
+                    600,
+                    ui.PixelFormat.rgba8888,
+                    (result) {
+                      isRendering = false;
+                      setState(() {
+                        image = result;
+                      });
+                    },
+                  );
+                },
+                child: Container(
+                  width: 800,
+                  height: 600,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1,
+                    ),
+                  ),
+                  child: image == null
+                      ? const SizedBox.shrink()
+                      : RawImage(image: image!),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

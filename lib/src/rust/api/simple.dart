@@ -6,6 +6,7 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// The type `Pos` is not used by any `pub` functions, thus it is ignored.
 // The type `RENDERERS` is not used by any `pub` functions, thus it is ignored.
 // The type `RenderCommand` is not used by any `pub` functions, thus it is ignored.
 // The type `RenderInfo` is not used by any `pub` functions, thus it is ignored.
@@ -16,5 +17,6 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 String greet({required String name, dynamic hint}) =>
     RustLib.instance.api.greet(name: name, hint: hint);
 
-Future<Uint8List> testRender({dynamic hint}) =>
-    RustLib.instance.api.testRender(hint: hint);
+Future<Uint8List> testRender(
+        {required double x, required double y, dynamic hint}) =>
+    RustLib.instance.api.testRender(x: x, y: y, hint: hint);
