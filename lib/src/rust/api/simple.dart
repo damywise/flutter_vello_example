@@ -6,6 +6,13 @@
 import '../frb_generated.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// The type `RENDERERS` is not used by any `pub` functions, thus it is ignored.
+// The type `RenderCommand` is not used by any `pub` functions, thus it is ignored.
+// The type `RenderInfo` is not used by any `pub` functions, thus it is ignored.
+// The type `RenderRequest` is not used by any `pub` functions, thus it is ignored.
+// The type `RenderResponse` is not used by any `pub` functions, thus it is ignored.
+// The type `SimpleContext` is not used by any `pub` functions, thus it is ignored.
+
 String greet({required String name, dynamic hint}) =>
     RustLib.instance.api.greet(name: name, hint: hint);
 

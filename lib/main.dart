@@ -60,7 +60,9 @@ class _MyAppState extends State<MyApp> {
             TextButton(
               onPressed: () async {
                 print('Get Image');
+                final now = DateTime.now();
                 final bytes = await testRender();
+                print('Get Image took ${DateTime.now().difference(now)}');
                 ui.decodeImageFromPixels(
                   bytes,
                   800,

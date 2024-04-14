@@ -11,6 +11,7 @@ anyhow = "1.0.82"
 clap = { version = "4.5.4", features = ["derive"] }
 flutter_rust_bridge = "=2.0.0-dev.31"
 futures-intrusive = "0.5.0"
+lazy_static = "1.4.0"
 pollster = "0.3.0"
 vello = "0.1.0"
 wgpu = "0.19.3"

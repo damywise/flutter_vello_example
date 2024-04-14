@@ -1178,6 +1178,7 @@ dependencies = [
  "clap",
  "flutter_rust_bridge",
  "futures-intrusive",
+ "lazy_static",
  "pollster",
  "vello",
  "wgpu",
